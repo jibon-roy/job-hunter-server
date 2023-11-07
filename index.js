@@ -41,7 +41,7 @@ async function run() {
 
         app.post('/jobs', async (req, res) => {
             const jobs = req.body;
-            const result = jobsCollection.insertOne(jobs);
+            const result = await jobsCollection.insertOne(jobs);
             res.send(result);
         })
 
@@ -56,6 +56,22 @@ async function run() {
                 res.send(result);
             }
         })
+
+        app.put('/users/:user', async (req, res) => {
+            const user = req.params.user;
+            const addedJob = req.body;
+            const query = { email: user }
+            const addJob = {
+                $push: {
+                    addedJobsId: addedJob
+                }
+
+            }
+            const result = await usersCollection.updateOne(query, addJob)
+            res.send(result);
+        })
+
+
 
 
         // Send a ping to confirm a successful connection
