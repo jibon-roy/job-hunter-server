@@ -103,9 +103,44 @@ async function run() {
             res.send(jobData);
         })
 
+        app.delete('/postedData', async (req, res) => {
+            const postId = req.query.postId;
+            const find = { _id: new ObjectId(postId) }
+            const jobData = await jobsCollection.deleteOne(find)
+            res.send(jobData);
+        })
 
+        app.delete('/deleteJobDataFromUser', async (req, res) => {
+            const user = req.query.email;
+            const postId = req.query.postId;
+            const query = { email: user }
+            const removeJob = {
+                $pull: {
+                    addedJobsId: [postId]
+                }
+            }
+            const result = await usersCollection.updateOne(query, removeJob)
+            res.send(result);
+        })
 
+        app.put('/updateJob', async (req, res) => {
+            const updateJob = req.body;
+            const postId = updateJob?.post?._id;
+            const query = { _id: new ObjectId(postId) }
+            const updateData = {
+                $set: {
+                    jobTitle: updateJob.jobTitle,
+                    deadline: updateJob.deadline,
+                    category: updateJob.category,
+                    minPrice: updateJob.minPrice,
+                    maxPrice: updateJob.maxPrice,
+                    jobDescription: updateJob.jobDescription
+                }
+            }
 
+            const result = await jobsCollection.findOneAndUpdate(query, updateData)
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
