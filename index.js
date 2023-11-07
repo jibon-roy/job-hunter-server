@@ -45,6 +45,7 @@ async function run() {
             res.send(result);
         })
 
+
         app.post('/users', async (req, res) => {
             const userData = req.body;
             const query = { email: userData.email }
@@ -55,6 +56,11 @@ async function run() {
                 const result = usersCollection.insertOne(userData);
                 res.send(result);
             }
+        })
+
+        app.get('/jobs', async (req, res) => {
+            const jobs = await jobsCollection.find().toArray();
+            res.send(jobs);
         })
 
         app.put('/users/:user', async (req, res) => {
@@ -70,6 +76,8 @@ async function run() {
             const result = await usersCollection.updateOne(query, addJob)
             res.send(result);
         })
+
+
 
 
 
