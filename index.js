@@ -89,6 +89,19 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/posted', async (req, res) => {
+            const userEmail = req.query.email;
+            const find = { email: userEmail }
+            const postedJob = await usersCollection.findOne(find)
+            res.send(postedJob);
+        })
+
+        app.get('/postedData', async (req, res) => {
+            const postId = req.query.postId;
+            const find = { _id: new ObjectId(postId) }
+            const jobData = await jobsCollection.findOne(find)
+            res.send(jobData);
+        })
 
 
 
