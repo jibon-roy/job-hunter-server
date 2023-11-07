@@ -6,7 +6,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173' || 'http://localhost:5174',
+    credentials: true
+}));
 app.use(express.json());
 
 
@@ -28,10 +31,30 @@ async function run() {
 
         const Database = client.db('JobHunterDb')
         const sliderData = Database.collection('sliderData');
+        const jobsCollection = Database.collection('jobs');
+        const usersCollection = Database.collection('usersData');
 
         app.get('/sliders', async (req, res) => {
             const sliders = await sliderData.find().toArray();
             res.send(sliders);
+        })
+
+        app.post('/jobs', async (req, res) => {
+            const jobs = req.body;
+            const result = jobsCollection.insertOne(jobs);
+            res.send(result);
+        })
+
+        app.post('/users', async (req, res) => {
+            const userData = req.body;
+            const query = { email: userData.email }
+            const existsUser = await usersCollection.findOne(query);
+            if (existsUser) {
+                return;
+            } else {
+                const result = usersCollection.insertOne(userData);
+                res.send(result);
+            }
         })
 
 
