@@ -118,31 +118,6 @@ async function run() {
         }
         )
 
-        app.put('/user/status', async (req, res) => {
-            const data = req.body
-            const email = req.query.email;
-            const jobId = req.query.jobId;
-            console.log(data.status, jobId, email);
-            const query = {
-                email: email, bidJobsData: [
-                    { jobId: jobId }
-                ]
-            }
-            const status =
-            {
-                $set: {
-                    bidJobsData: [
-                        {
-                            status: data.status
-                        }
-                    ]
-                }
-            }
-            const result = await usersCollection.updateOne(query, status)
-            res.send(result);
-        }
-        )
-
         app.get('/posted', async (req, res) => {
             const userEmail = req.query.email;
             const find = { email: userEmail }
