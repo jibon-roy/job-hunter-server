@@ -118,6 +118,55 @@ async function run() {
         }
         )
 
+        app.put('/user/status', async (req, res) => {
+            const data = req.body
+            const email = req.query.email;
+            const option = { upsert: true }
+            const query = {
+                email: email
+            }
+            const status = {
+                $set: {
+                    bidJobsData:
+                        [{
+                            jobId: data.jobId,
+                            title: data.title,
+                            employee: data.employee,
+                            amount: data.amount,
+                            deadline: data.deadline,
+                            status: data.status,
+                        }]
+
+                }
+            }
+            const result = await usersCollection.updateOne(query, status, option)
+            res.send(result);
+        }
+        )
+
+        // app.get('/user/status', async (req, res) => {
+        //     const data = req.body
+        //     const emails = req.query.email;
+        //     const jobIds = req.query.jobId;
+        //     console.log(data.status, jobIds, emails);
+        //     const query = {
+        //         email: emails
+        //     }
+        //     // const status = {
+        //     //     $set: {
+        //     //         bidJobsData: [
+        //     //             {
+        //     //                 status: data.status
+        //     //             }
+        //     //         ]
+        //     //     }
+        //     // }
+        //     const result = await usersCollection.findOne(query)
+        //     res.send(result);
+        // }
+        // )
+
+
         app.get('/posted', async (req, res) => {
             const userEmail = req.query.email;
             const find = { email: userEmail }
