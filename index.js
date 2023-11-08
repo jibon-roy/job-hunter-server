@@ -89,6 +89,35 @@ async function run() {
             res.send(result);
         })
 
+        // add my bid data 
+
+        app.put('/user/bid', async (req, res) => {
+            const user = req.query.setEmail;
+            const bidedJob = req.body;
+            const query = { email: user }
+            const bidJob = {
+                $push: {
+                    bidJobsData: bidedJob
+                }
+            }
+            const result = await usersCollection.updateOne(query, bidJob)
+            res.send(result);
+        })
+
+        app.put('/user/request', async (req, res) => {
+            const data = req.body
+            const id = req.query.jobId;
+            const query = { _id: new ObjectId(id) }
+            const bidJob = {
+                $push: {
+                    bidUsers: data
+                }
+            }
+            const result = await jobsCollection.updateOne(query, bidJob)
+            res.send(result);
+        }
+        )
+
         app.get('/posted', async (req, res) => {
             const userEmail = req.query.email;
             const find = { email: userEmail }
@@ -122,6 +151,8 @@ async function run() {
             const result = await usersCollection.updateOne(query, removeJob)
             res.send(result);
         })
+
+
 
         app.put('/updateJob', async (req, res) => {
             const updateJob = req.body;
