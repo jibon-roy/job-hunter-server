@@ -7,8 +7,8 @@ const port = process.env.PORT || 5000;
 
 // middleware
 app.use(cors({
-    origin: 'http://localhost:5173' || 'http://localhost:5174',
-    credentials: true
+    origin: 'http://localhost:5173' || 'https://job-hunter-site.web.app',
+    credentials: true,
 }));
 app.use(express.json());
 
@@ -114,6 +114,31 @@ async function run() {
                 }
             }
             const result = await jobsCollection.updateOne(query, bidJob)
+            res.send(result);
+        }
+        )
+
+        app.put('/user/status', async (req, res) => {
+            const data = req.body
+            const email = req.query.email;
+            const jobId = req.query.jobId;
+            console.log(data.status, jobId, email);
+            const query = {
+                email: email, bidJobsData: [
+                    { jobId: jobId }
+                ]
+            }
+            const status =
+            {
+                $set: {
+                    bidJobsData: [
+                        {
+                            status: data.status
+                        }
+                    ]
+                }
+            }
+            const result = await usersCollection.updateOne(query, status)
             res.send(result);
         }
         )
