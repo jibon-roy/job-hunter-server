@@ -28,7 +28,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        // await client.connect();
+
 
         const Database = client.db('JobHunterDb')
         const sliderData = Database.collection('sliderData');
@@ -145,27 +145,27 @@ async function run() {
         }
         )
 
-        // app.get('/user/status', async (req, res) => {
-        //     const data = req.body
-        //     const emails = req.query.email;
-        //     const jobIds = req.query.jobId;
-        //     console.log(data.status, jobIds, emails);
-        //     const query = {
-        //         email: emails
-        //     }
-        //     // const status = {
-        //     //     $set: {
-        //     //         bidJobsData: [
-        //     //             {
-        //     //                 status: data.status
-        //     //             }
-        //     //         ]
-        //     //     }
-        //     // }
-        //     const result = await usersCollection.findOne(query)
-        //     res.send(result);
-        // }
-        // )
+        app.get('/user/status', async (req, res) => {
+            const data = req.body
+            const emails = req.query.email;
+            const jobIds = req.query.jobId;
+            console.log(data.status, jobIds, emails);
+            const query = {
+                email: emails
+            }
+            // const status = {
+            //     $set: {
+            //         bidJobsData: [
+            //             {
+            //                 status: data.status
+            //             }
+            //         ]
+            //     }
+            // }
+            const result = await usersCollection.findOne(query)
+            res.send(result);
+        }
+        )
 
 
         app.get('/posted', async (req, res) => {
